@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>서명 받기</title>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+
+        .signature-container {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h1 {
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        #nameInput {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        #signature-pad {
+            border: 2px dashed #e0e0e0;
+            border-radius: 6px;
+            cursor: crosshair;
+            width: 100%;
+            height: 200px;
+        }
+
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        #clearBtn {
+            background-color: #7f8c8d;
+            color: white;
+        }
+
+        #clearBtn:hover {
+            background-color: #95a5a6;
+            transform: translateY(-2px);
+        }
+
+        #submitBtn {
+            background-color: #3498db;
+            color: white;
+        }
+
+        #submitBtn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            .signature-container {
+                padding: 20px;
+                margin: 20px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="signature-container">
+        <h1>전자 서명</h1>
+        
+        <div class="input-group">
+            <label for="nameInput">성함</label>
+            <input type="text" id="nameInput" placeholder="이름을 입력하세요">
+        </div>
+        
+        <div class="input-group">
+            <label>서명란</label>
+            <canvas id="signature-pad"></canvas>
+        </div>
+        
+        <div class="button-group">
+            <button id="clearBtn">다시 쓰기</button>
+            <button id="submitBtn">제출하기</button>
+        </div>
+    </div>
+
+    <script>
+        // 자바스크립트 코드는 여기에 위치합니다.
+        // (이전 답변과 동일)
+        const canvas = document.getElementById('signature-pad');
+        const ratio =  Math.max(window.devicePixelRatio || 1, 1);
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        canvas.getContext("2d").scale(ratio, ratio);
+
+        const signaturePad = new SignaturePad(canvas);
+
+        const clearBtn = document.getElementById('clearBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const nameInput = document.getElementById('nameInput');
+
+        clearBtn.addEventListener('click', () => {
+            signaturePad.clear();
+        });
+
+        submitBtn.addEventListener('click', () => {
+            if (signaturePad.isEmpty() || nameInput.value.trim() === "") {
+                alert("이름과 서명을 모두 입력해주세요.");
+            } else {
+                const signatureImage = signaturePad.toDataURL("image/png");
+                const name = nameInput.value.trim();
+                alert(name + "님의 서명이 제출 준비되었습니다.");
+            }
+        });
+
+        window.addEventListener("resize", () => {
+            const ratio =  Math.max(window.devicePixelRatio || 1, 1);
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            canvas.getContext("2d").scale(ratio, ratio);
+            signaturePad.clear();
+        });
+    </script>
+
+</body>
+</html>
