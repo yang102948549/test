@@ -1,208 +1,204 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>전자 서명</title>
-  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
-
-    body {
-      font-family: 'Noto Sans KR', sans-serif;
-      background-color: #f4f7f6;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      color: #333;
-    }
-
-    .signature-container {
-      background: #ffffff;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 500px;
-      text-align: center;
-    }
-
-    h1 {
-      font-weight: 700;
-      margin-bottom:  30px;
-      color: #2c3e50;
-    }
-
-    .input-group {
-      margin-bottom: 25px;
-      text-align: left;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 500;
-      color: #555;
-    }
-
-    #nameInput {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      box-sizing: border-box;
-      font-size: 16px;
-    }
-
-    #signature-pad {
-      border: 2px dashed #e0e0e0;
-      border-radius: 6px;
-      cursor: crosshair;
-      width: 100%;
-      height: 200px;
-    }
-
-    .button-group {
-      margin-top: 20px;
-      display: flex;
-      gap: 10px;
-    }
-
-    button {
-      flex: 1;
-      padding: 15px 20px;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-
-    #clearBtn {
-      background-color: #7f8c8d;
-      color: white;
-    }
-
-    #clearBtn:hover {
-      background-color: #95a5a6;
-      transform: translateY(-2px);
-    }
-
-    #submitBtn {
-      background-color: #3498db;
-      color: white;
-    }
-
-    #submitBtn:hover {
-      background-color: #2980b9;
-      transform: translateY(-2px);
-    }
-
-    @media (max-width: 600px) {
-      .signature-container {
-        padding: 20px;
-        margin: 20px;
-      }
-
-      h1 {
-        font-size: 24px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전자 서명 웹앱</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            padding: 30px 40px;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 2em;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: bold;
+            text-align: left;
+        }
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 12px 10px;
+            margin-bottom: 25px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+        canvas {
+            border: 2px solid #a0c4ff;
+            border-radius: 8px;
+            background-color: #e0f2f7;
+            display: block;
+            margin: 0 auto 25px auto;
+            width: 100%;
+            height: 200px;
+            cursor: crosshair;
+            touch-action: none; /* Prevent scrolling on touch devices */
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            flex: 1;
+            min-width: 120px;
+        }
+        button.submit {
+            background-color: #6a0dad; /* Purple */
+            color: white;
+        }
+        button.submit:hover {
+            background-color: #520a83;
+            transform: translateY(-2px);
+        }
+        button.clear {
+            background-color: #ff6b6b; /* Reddish */
+            color: white;
+        }
+        button.clear:hover {
+            background-color: #e04f4f;
+            transform: translateY(-2px);
+        }
+        #message {
+            margin-top: 25px;
+            font-size: 1.1em;
+            color: #333;
+            font-weight: bold;
+            min-height: 25px; /* Prevent layout shift */
+        }
+        .success {
+            color: #28a745; /* Green */
+        }
+        .error {
+            color: #dc3545; /* Red */
+        }
+    </style>
 </head>
 <body>
-  <div class="signature-container">
-    <h1>전자 서명</h1>
+    <div class="container">
+        <h1>전자 서명</h1>
+        <form id="signatureForm">
+            <label for="name">이름:</label>
+            <input type="text" id="name" placeholder="이름을 입력하세요" required>
 
-    <div class="input-group">
-      <label for="nameInput">성함</label>
-      <input type="text" id="nameInput" placeholder="이름을 입력하세요" />
+            <label for="signaturePad">서명:</label>
+            <canvas id="signaturePad"></canvas>
+
+            <div class="button-group">
+                <button type="button" class="clear" id="clearBtn">다시 쓰기</button>
+                <button type="submit" class="submit" id="submitBtn">서명 제출</button>
+            </div>
+        </form>
+        <p id="message"></p>
     </div>
 
-    <div class="input-group">
-      <label>서명란</label>
-      <canvas id="signature-pad"></canvas>
-    </div>
-
-    <div class="button-group">
-      <button id="clearBtn">다시 쓰기</button>
-      <button id="submitBtn">제출하기</button>
-    </div>
-  </div>
-
-  <script>
-    // 이 URL이 위에서 확인한 GAS 배포 URL과 정확히 일치해야 합니다.
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzA9KEPSiSk3cpZaxuEGzEtwzgAIlyww2ZGqMFO9hL82ABKRk_adqlWxsC8NMIscAvnkg/exec";
-
-    const canvas = document.getElementById('signature-pad');
-    const ratio = Math.max(window.devicePixelRatio || 1, 1);
-    canvas.width = canvas.offsetWidth * ratio;
-    canvas.height = canvas.offsetHeight * ratio;
-    canvas.getContext("2d").scale(ratio, ratio);
-
-    const signaturePad = new SignaturePad(canvas);
-    const clearBtn = document.getElementById('clearBtn');
-    const submitBtn = document.getElementById('submitBtn');
-    const nameInput = document.getElementById('nameInput');
-
-    clearBtn.addEventListener('click', () => {
-      signaturePad.clear();
-    });
-
-    submitBtn.addEventListener('click', async () => {
-      const name = nameInput.value.trim();
-
-      if (signaturePad.isEmpty() || name === "") {
-        alert("이름과 서명을 모두 입력해주세요.");
-        return;
-      }
-
-      const signatureImage = signaturePad.toDataURL("image/png");
-
-      try {
-        const response = await fetch(SCRIPT_URL, {
-          method: 'POST',
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: `childName=${encodeURIComponent(name)}&imageDataUrl=${encodeURIComponent(signatureImage)}`
+    <script>
+        var canvas = document.getElementById('signaturePad');
+        var signaturePad = new SignaturePad(canvas, {
+            backgroundColor: 'rgb(224, 242, 247)' // canvas background color
         });
 
-        // 응답 상태 코드 확인
-        if (!response.ok) {
-          const errorText = await response.text(); // 서버 응답 본문을 텍스트로 읽어봅니다.
-          console.error("HTTP error! Status:", response.status, "Response text:", errorText);
-          alert(`서버 응답 오류: ${response.status}. 자세한 내용은 콘솔을 확인해주세요.`);
-          return;
+        // Canvas 크기 조절 (반응형)
+        function resizeCanvas() {
+            var ratio = Math.max(window.devicePixelRatio || 1, 1);
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            canvas.getContext("2d").scale(ratio, ratio);
+            signaturePad.clear(); // Clear signature after resizing
         }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
-        const result = await response.json();
+        document.getElementById('clearBtn').addEventListener('click', function () {
+            signaturePad.clear();
+            document.getElementById('message').textContent = '';
+        });
 
-        if (result.status === "success") {
-          alert("서명이 성공적으로 제출되었습니다!\n파일 ID: " + result.fileId + "\n스프레드시트 URL: " + result.sheetUrl);
-          signaturePad.clear();
-          nameInput.value = "";
-        } else {
-          alert("서명 제출 실패: " + result.message);
-          console.error("서버 응답 오류:", result.message, result.detail || "");
-        }
-      } catch (error) {
-        alert("네트워크 오류 또는 서버 통신 실패: " + error.message);
-        console.error("Fetch 오류:", error);
-      }
-    });
+        document.getElementById('signatureForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // 기본 폼 제출 방지
 
-    window.addEventListener("resize", () => {
-      const ratio = Math.max(window.devicePixelRatio || 1, 1);
-      canvas.width = canvas.offsetWidth * ratio;
-      canvas.height = canvas.offsetHeight * ratio;
-      canvas.getContext("2d").scale(ratio, ratio);
-      signaturePad.clear(); // 캔버스 크기 변경 시 서명 초기화
-    });
-  </script>
+            const name = document.getElementById('name').value.trim();
+            const messageDiv = document.getElementById('message');
+
+            if (!name) {
+                messageDiv.textContent = '이름을 입력해주세요.';
+                messageDiv.className = 'error';
+                return;
+            }
+
+            if (signaturePad.isEmpty()) {
+                messageDiv.textContent = '서명을 해주세요.';
+                messageDiv.className = 'error';
+                return;
+            }
+
+            // 서명 데이터를 PNG Base64 형식으로 가져오기
+            const imageData = signaturePad.toDataURL('image/png');
+
+            messageDiv.textContent = '서명 제출 중...';
+            messageDiv.className = ''; // Clear previous status
+
+            // Google Apps Script 웹 앱 URL (배포 후 여기에 붙여넣을 것)
+            const gasWebAppUrl = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE'; // <<< 이 부분을 GAS 배포 후 URL로 교체
+
+            fetch(gasWebAppUrl, {
+                method: 'POST',
+                mode: 'no-cors', // CORS 정책 때문에 no-cors 모드로 설정 (GAS 웹앱은 응답 헤더 설정이 제한적)
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    name: name,
+                    imageData: imageData
+                })
+            })
+            .then(response => {
+                // no-cors 모드에서는 response.ok 등을 직접 확인할 수 없음.
+                // 성공 여부는 GAS 스크립트 실행 로그나 Google Sheets, Drive 상태로 확인해야 함.
+                // 사용자에게는 일단 제출 완료 메시지를 보여줍니다.
+                messageDiv.textContent = '서명이 성공적으로 제출되었습니다! 잠시 후 데이터가 업데이트 됩니다.';
+                messageDiv.className = 'success';
+                signaturePad.clear();
+                document.getElementById('name').value = '';
+            })
+            .catch(error => {
+                console.error('Error submitting signature:', error);
+                messageDiv.textContent = '서명 제출 중 오류가 발생했습니다. 다시 시도해주세요.';
+                messageDiv.className = 'error';
+            });
+        });
+    </script>
 </body>
 </html>
