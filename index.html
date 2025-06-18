@@ -134,6 +134,7 @@
   </div>
 
   <script>
+    // 이 URL이 위에서 확인한 GAS 배포 URL과 정확히 일치해야 합니다.
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzA9KEPSiSk3cpZaxuEGzEtwzgAIlyww2ZGqMFO9hL82ABKRk_adqlWxsC8NMIscAvnkg/exec";
 
     const canvas = document.getElementById('signature-pad');
@@ -171,6 +172,14 @@
           body: `childName=${encodeURIComponent(name)}&imageDataUrl=${encodeURIComponent(signatureImage)}`
         });
 
+        // 응답 상태 코드 확인
+        if (!response.ok) {
+          const errorText = await response.text(); // 서버 응답 본문을 텍스트로 읽어봅니다.
+          console.error("HTTP error! Status:", response.status, "Response text:", errorText);
+          alert(`서버 응답 오류: ${response.status}. 자세한 내용은 콘솔을 확인해주세요.`);
+          return;
+        }
+
         const result = await response.json();
 
         if (result.status === "success") {
@@ -179,7 +188,7 @@
           nameInput.value = "";
         } else {
           alert("서명 제출 실패: " + result.message);
-          console.error("서버 응답 오류:", result.message);
+          console.error("서버 응답 오류:", result.message, result.detail || "");
         }
       } catch (error) {
         alert("네트워크 오류 또는 서버 통신 실패: " + error.message);
@@ -192,7 +201,7 @@
       canvas.width = canvas.offsetWidth * ratio;
       canvas.height = canvas.offsetHeight * ratio;
       canvas.getContext("2d").scale(ratio, ratio);
-      signaturePad.clear();
+      signaturePad.clear(); // 캔버스 크기 변경 시 서명 초기화
     });
   </script>
 </body>
